@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Akshath's developer portfolio — Computer Science Engineering student, aspiring Software Engineer, and technology enthusiast.">
+
+    <meta name="theme-color" content="#080a08">
+
+    
+    <title>Akshath | Software Engineer</title>
+
+    <!-- Google Fonts: requires an internet connection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- External JavaScript -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- ================= NAVIGATION ================= -->
+     <canvas id="particle-canvas" aria-hidden="true"></canvas>
+<div id="custom-cursor" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <nav class="navbar container" aria-label="Main navigation">
+
+            <a href="#home" class="logo" aria-label="Akshath home">
+                AK<span>.</span>
+            </a>
+
+            <button
+                class="menu-toggle"
+                id="menu-toggle"
+                type="button"
+                aria-label="Open navigation menu"
+                aria-controls="nav-links"
+                aria-expanded="false">
+
+                <span></span>
+                <span></span>
+            </button>
+
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#achievements">Achievements</a></li>
+                <li><a href="#contact" class="nav-contact">Let's Talk ↗</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+
+    <main>
+
+        <!-- ================= HERO SECTION ================= -->
+
+        <section class="hero section" id="home">
+
+            <div class="hero-grid container">
+
+                <div class="hero-content">
+
+                    <p class="eyebrow">
+                        <span class="status-dot"></span>
+                        COMPUTER SCIENCE ENGINEERING STUDENT
+                    </p>
+
+                    <h1>
+                        Building the<br>
+                        <span class="text-accent">future,</span>
+                        one line<br>
+                        of code at a time<span class="text-accent">.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Hi, I'm <strong>Akshath</strong> — an aspiring Software
+                        Engineer passionate about coding, solving problems,
+                        and turning ideas into practical digital experiences.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a href="#projects" class="button button-primary">
+                            Explore My Work <span aria-hidden="true">↗</span>
+                        </a>
+
+                        <a href="#contact" class="button button-secondary">
+                            Get In Touch
+                        </a>
+
+                        <button
+                            type="button"
+                            class="button button-secondary"
+                            id="recruiter-mode-button">
+                            Recruiter Mode
+                        </button>
+
+                    </div>
+
+                    <div class="hero-meta">
+                        <span>JAVA DEVELOPER IN PROGRESS</span>
+                        <span class="meta-divider" aria-hidden="true"></span>
+                        <span>ALWAYS LEARNING</span>
+                    </div>
+
+                </div>
+
+
+                <!-- Decorative terminal card -->
+
+                <div class="hero-visual" aria-label="Decorative code terminal">
+
+                    <div class="terminal-card">
+
+                        <div class="terminal-header">
+
+                            <div class="terminal-dots" aria-hidden="true">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                            <span class="terminal-title">akshath.java</span>
+
+                            <span class="terminal-status">● ONLINE</span>
+
+                        </div>
+
+                        <div class="terminal-body">
+
+                            <p class="code-comment">
+                                // A little about me
+                            </p>
+
+                            <p>
+                                <span class="code-purple">class</span>
+                                <span class="code-green"> Developer</span> {
+                            </p>
+
+                            <br>
+
+                            <p class="indent">
+                                <span class="code-purple">String</span>
+                                name =
+                            </p>
+
+                            <p class="indent code-string">
+                                "Akshath";
+                            </p>
+
+                            <br>
+
+                            <p class="indent">
+                                <span class="code-purple">String</span>
+                                goal =
+                            </p>
+
+                            <p class="indent code-string">
+                                "Software Engineer";
+                            </p>
+
+                            <br>
+
+                            <p class="indent">
+                                <span class="code-purple">boolean</span>
+                                learning = <span class="code-green">true</span>;
+                            </p>
+
+                            <p class="indent">
+                                <span class="code-purple">boolean</span>
+                                building = <span class="code-green">true</span>;
+                            </p>
+
+                            <br>
+
+                            <p>}</p>
+
+                            <p class="terminal-cursor" aria-hidden="true">
+                                _
+                            </p>
+
+                        </div>
+
+                        <div class="terminal-footer">
+                            <span>JAVA</span>
+                            <span>CREATIVITY</span>
+                            <span>PROBLEM SOLVING</span>
+                        </div>
+
+                    </div>
+
+                    <div class="visual-glow" aria-hidden="true"></div>
+
+                </div>
+
+            </div>
+
+
+            <a href="#about" class="scroll-indicator">
+                <span class="scroll-line" aria-hidden="true"></span>
+                SCROLL TO EXPLORE
+            </a>
+
+        </section>
+
+
+        <!-- ================= ABOUT SECTION ================= -->
+
+        <section class="section about-section" id="about">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">01 / ABOUT ME</p>
+
+                    <h2>
+                        Curious mind.<br>
+                        <span class="text-muted">Builder's mindset.</span>
+                    </h2>
+
+                </div>
+
+
+                <div class="about-grid">
+
+                    <div class="about-intro">
+
+                        <p class="about-lead">
+                            I'm a Computer Science Engineering student
+                            working toward becoming a skilled Software Engineer.
+                        </p>
+
+                        <p>
+                            My journey is about learning how software works,
+                            writing better code, and building projects that
+                            solve real problems.
+                        </p>
+
+                        <p>
+                            I enjoy exploring new technologies, improving my
+                            programming fundamentals, and collaborating with
+                            others to turn ideas into working applications.
+                        </p>
+
+                        <p>
+                            My current focus is strengthening my Java skills,
+                            understanding data structures and algorithms,
+                            and developing projects that demonstrate my
+                            practical abilities.
+                        </p>
+
+                    </div>
+
+
+                    <div class="about-details">
+
+                        <div class="detail-card">
+                            <span class="detail-number">01</span>
+                            <div>
+                                <h3>Learn</h3>
+                                <p>Build strong programming fundamentals.</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <span class="detail-number">02</span>
+                            <div>
+                                <h3>Build</h3>
+                                <p>Turn knowledge into practical projects.</p>
+                            </div>
+                        </div>
+
+                        <div class="detail-card">
+                            <span class="detail-number">03</span>
+                            <div>
+                                <h3>Improve</h3>
+                                <p>Keep refining code, skills, and ideas.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SKILLS SECTION ================= -->
+
+        <section class="section skills-section" id="skills">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">02 / TECH STACK</p>
+
+                    <h2>
+                        Tools of the <span class="text-accent">trade.</span>
+                    </h2>
+
+                    <p class="section-description">
+                        Technologies I'm learning and using to build my
+                        developer skill set.
+                    </p>
+
+                </div>
+
+
+                <div class="skills-grid">
+
+                    <article class="skill-card">
+                        <span class="skill-index">01</span>
+                        <div class="skill-icon" aria-hidden="true">J</div>
+                        <h3>Java</h3>
+                        <p>Programming fundamentals and object-oriented programming.</p>
+                        <span class="skill-category">PROGRAMMING</span>
+                    </article>
+
+                    <article class="skill-card">
+                        <span class="skill-index">02</span>
+                        <div class="skill-icon" aria-hidden="true">&lt;/&gt;</div>
+                        <h3>HTML5</h3>
+                        <p>Semantic structure and accessible web pages.</p>
+                        <span class="skill-category">WEB</span>
+                    </article>
+
+                    <article class="skill-card">
+                        <span class="skill-index">03</span>
+                        <div class="skill-icon" aria-hidden="true">#</div>
+                        <h3>CSS3</h3>
+                        <p>Responsive layouts, styling, and animations.</p>
+                        <span class="skill-category">WEB</span>
+                    </article>
+
+                    <article class="skill-card">
+                        <span class="skill-index">04</span>
+                        <div class="skill-icon" aria-hidden="true">JS</div>
+                        <h3>JavaScript</h3>
+                        <p>Learning interactive web development.</p>
+                        <span class="skill-category">PROGRAMMING</span>
+                    </article>
+
+                    <article class="skill-card">
+                        <span class="skill-index">05</span>
+                        <div class="skill-icon" aria-hidden="true">⌘</div>
+                        <h3>Git</h3>
+                        <p>Tracking changes and managing code versions.</p>
+                        <span class="skill-category">DEVELOPER TOOLS</span>
+                    </article>
+
+                    <article class="skill-card">
+                        <span class="skill-index">06</span>
+                        <div class="skill-icon" aria-hidden="true">GH</div>
+                        <h3>GitHub</h3>
+                        <p>Hosting repositories and sharing projects.</p>
+                        <span class="skill-category">DEVELOPER TOOLS</span>
+                    </article>
+
+                </div>
+
+                <p class="skills-note">
+                    Note: Keep these skills aligned with what you can
+                    currently explain and demonstrate.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROJECTS SECTION ================= -->
+
+        <section class="section projects-section" id="projects">
+
+            <div class="container">
+
+                <div class="section-heading projects-heading">
+
+                    <div>
+                        <p class="eyebrow">03 / SELECTED WORK</p>
+
+                        <h2>
+                            Ideas into <span class="text-accent">reality.</span>
+                        </h2>
+                    </div>
+
+                    <p class="section-description">
+                        A selection of projects I'm building, exploring,
+                        or planning to develop.
+                    </p>
+
+                </div>
+
+
+                <div class="projects-grid">
+
+                    <!-- PROJECT 1 -->
+
+                    <article class="project-card">
+
+                        <div class="project-top">
+
+                            <span class="project-number">PROJECT / 01</span>
+
+                            <span class="project-symbol" aria-hidden="true">↗</span>
+
+                        </div>
+
+                        <div class="project-visual project-visual-one"
+                             aria-hidden="true">
+
+                            <div class="project-window">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                            <div class="project-graphic">
+                                <div class="graphic-circle">AI</div>
+                                <div class="graphic-line"></div>
+                                <div class="graphic-box">SKILLS</div>
+                                <div class="graphic-line"></div>
+                                <div class="graphic-box">ROLE</div>
+                            </div>
+
+                        </div>
+
+                        <div class="project-content">
+
+                            <p class="project-status">HACKATHON PROJECT</p>
+
+                            <h3>Resume-to-Role Skill Gap Coach</h3>
+
+                            <p>
+                                A project concept designed to compare a
+                                candidate's skills with a target role and
+                                identify areas for improvement.
+                            </p>
+
+                            <div class="tag-list">
+                                <span>AI</span>
+                                <span>APIs</span>
+                                <span>Supabase</span>
+                            </div>
+
+                            <!-- Replace # with the real repository URL. -->
+                            <a
+                                href="#"
+                                class="project-link placeholder-link"
+                                data-placeholder="true"
+                                aria-label="Add the real GitHub repository link for Resume-to-Role Skill Gap Coach">
+
+                                Repository link to be added
+                                <span aria-hidden="true">↗</span>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- PROJECT 2 -->
+
+                    <article class="project-card">
+
+                        <div class="project-top">
+
+                            <span class="project-number">PROJECT / 02</span>
+
+                            <span class="project-symbol" aria-hidden="true">↗</span>
+
+                        </div>
+
+                        <div class="project-visual project-visual-two"
+                             aria-hidden="true">
+
+                            <div class="chain-node">
+                                <span>01</span>
+                                FARM
+                            </div>
+
+                            <div class="chain-connector"></div>
+
+                            <div class="chain-node">
+                                <span>02</span>
+                                SUPPLY
+                            </div>
+
+                            <div class="chain-connector"></div>
+
+                            <div class="chain-node">
+                                <span>03</span>
+                                CONSUMER
+                            </div>
+
+                        </div>
+
+                        <div class="project-content">
+
+                            <p class="project-status">BLOCKCHAIN CONCEPT</p>
+
+                            <h3>AgriChain</h3>
+
+                            <p>
+                                A supply-chain transparency concept exploring
+                                how blockchain and QR codes can help track
+                                agricultural products from farm to consumer.
+                            </p>
+
+                            <div class="tag-list">
+                                <span>Blockchain</span>
+                                <span>Smart Contracts</span>
+                                <span>QR Codes</span>
+                            </div>
+
+                            <!-- Replace # with the real repository URL. -->
+                            <a
+                                href="#"
+                                class="project-link placeholder-link"
+                                data-placeholder="true"
+                                aria-label="Add the real GitHub repository link for AgriChain">
+
+                                Repository link to be added
+                                <span aria-hidden="true">↗</span>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- PROJECT 3 -->
+
+                    <article class="project-card">
+
+                        <div class="project-top">
+
+                            <span class="project-number">PROJECT / 03</span>
+
+                            <span class="project-symbol" aria-hidden="true">↗</span>
+
+                        </div>
+
+                        <div class="project-visual project-visual-three"
+                             aria-hidden="true">
+
+                            <div class="task-interface">
+
+                                <div class="task-heading">
+                                    <span>MY TASKS</span>
+                                    <span>+</span>
+                                </div>
+
+                                <div class="task-row">
+                                    <span class="task-check"></span>
+                                    <span>Learn Java</span>
+                                </div>
+
+                                <div class="task-row">
+                                    <span class="task-check"></span>
+                                    <span>Practice coding</span>
+                                </div>
+
+                                <div class="task-row">
+                                    <span class="task-check"></span>
+                                    <span>Build a project</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="project-content">
+
+                            <p class="project-status">PERSONAL PROJECT IDEA</p>
+
+                            <h3>Student Task Manager</h3>
+
+                            <p>
+                                A proposed application for organizing
+                                assignments, tracking study tasks, and
+                                managing daily priorities.
+                            </p>
+
+                            <div class="tag-list">
+                                <span>Java</span>
+                                <span>OOP</span>
+                                <span>CRUD</span>
+                            </div>
+
+                            <!-- Add a repository after implementing the project. -->
+                            <a
+                                href="#"
+                                class="project-link placeholder-link"
+                                data-placeholder="true"
+                                aria-label="Add the real GitHub repository link for Student Task Manager">
+
+                                Repository link to be added
+                                <span aria-hidden="true">↗</span>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+                <p class="project-disclaimer">
+                    Some entries are project concepts. Update their status,
+                    descriptions, and links to reflect what has actually
+                    been implemented before presenting this portfolio to recruiters.
+                </p>
+
+                <div class="projects-footer">
+
+                    <a
+                        href="https://github.com/akshath-dotcom"
+                        class="button button-secondary"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        Visit My GitHub <span aria-hidden="true">↗</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ACHIEVEMENTS SECTION ================= -->
+
+        <section class="section achievements-section" id="achievements">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">04 / THE JOURNEY</p>
+
+                    <h2>
+                        Progress over <span class="text-accent">perfection.</span>
+                    </h2>
+
+                    <p class="section-description">
+                        My education, learning milestones, and experiences
+                        as I grow into a Software Engineer.
+                    </p>
+
+                </div>
+
+
+                <div class="timeline">
+
+                    <article class="timeline-item">
+
+                        <span class="timeline-marker" aria-hidden="true"></span>
+
+                        <div class="timeline-date">EDUCATION</div>
+
+                        <div class="timeline-content">
+                            <h3>B.E. Computer Science Engineering</h3>
+
+                            <p>
+                                Ponjesly College of Engineering
+                            </p>
+
+                            <p class="timeline-description">
+                                Developing a foundation in computer science,
+                                programming, and software development.
+                            </p>
+                        </div>
+
+                    </article>
+
+
+                    <article class="timeline-item">
+
+                        <span class="timeline-marker" aria-hidden="true"></span>
+
+                        <div class="timeline-date">HACKATHONS</div>
+
+                        <div class="timeline-content">
+                            <h3>Project Development & Collaboration</h3>
+
+                            <p>
+                                Exploring practical problem-solving through
+                                team-based projects and hackathon experiences.
+                            </p>
+
+                            <p class="timeline-description">
+                                Add specific events, dates, results, and your
+                                individual contributions where applicable.
+                            </p>
+                        </div>
+
+                    </article>
+
+
+                    <article class="timeline-item">
+
+                        <span class="timeline-marker" aria-hidden="true"></span>
+
+                        <div class="timeline-date">CURRENT FOCUS</div>
+
+                        <div class="timeline-content">
+                            <h3>Software Engineering Preparation</h3>
+
+                            <p>
+                                Java · Data Structures & Algorithms · Projects
+                            </p>
+
+                            <p class="timeline-description">
+                                Strengthening technical fundamentals and
+                                building practical evidence of my skills.
+                            </p>
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <div class="certification-note">
+
+                    <span class="certification-icon" aria-hidden="true">✳</span>
+
+                    <div>
+                        <h3>Certifications</h3>
+
+                        <p>
+                            Add verified certifications here, including the
+                            issuing organization, completion date, and
+                            certificate link. No certificates are claimed
+                            by this starter template.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CONTACT SECTION ================= -->
+
+        <section class="section contact-section" id="contact">
+
+            <div class="container">
+
+                <div class="contact-panel">
+
+                    <p class="eyebrow">05 / GET IN TOUCH</p>
+
+                    <h2>
+                        Have an idea?<br>
+                        <span class="text-accent">Let's build it.</span>
+                    </h2>
+
+                    <p class="contact-description">
+                        I'm interested in software development opportunities,
+                        meaningful projects, and connecting with people who
+                        enjoy building useful things.
+                    </p>
+
+                    <!-- Replace the placeholder email before publishing. -->
+                    <a
+                        href="mailto:YOUR_EMAIL@example.com"
+                        class="button button-primary email-button"
+                        id="email-link">
+
+                        Say Hello <span aria-hidden="true">↗</span>
+
+                    </a>
+
+                    <div class="social-links">
+
+                        <a
+                            href="https://github.com/akshath-dotcom"
+                            class="social-link"
+                            target="_blank"
+                            rel="noopener noreferrer">
+
+                            GitHub <span aria-hidden="true">↗</span>
+
+                        </a>
+
+                        <a
+                            href="https://www.linkedin.com/in/akshath-s-955219280/"
+                            class="social-link"
+                            target="_blank"
+                            rel="noopener noreferrer">
+
+                            LinkedIn <span aria-hidden="true">↗</span>
+
+                        </a>
+
+                        <a
+                            href="mailto:YOUR_EMAIL@example.com"
+                            class="social-link"
+                            id="email-text-link">
+
+                            Email <span aria-hidden="true">↗</span>
+
+                        </a>
+
+                    </div>
+
+                    <p class="contact-note">
+                        Replace placeholder links and email addresses before
+                        making this website public.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-content">
+
+            <a href="#home" class="logo" aria-label="Back to top">
+                AK<span>.</span>
+            </a>
+
+            <p>
+                Designed with intent. Built to keep improving.
+            </p>
+
+            <a href="#home" class="back-to-top">
+                BACK TO TOP ↑
+            </a>
+
+            <p class="copyright">
+                © <span id="current-year">2026</span> Akshath.
+                All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>
