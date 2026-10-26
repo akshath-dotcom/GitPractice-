@@ -3255,3 +3255,520 @@ main .social-links .social-link:hover,
         -webkit-backdrop-filter: none;
     }
 }
+
+/* Give project cards a visible seafoam tint so they read separately from white. */
+main .projects-grid .project-card {
+    background-color: rgba(192, 224, 207, 0.84);
+    background-image:
+        radial-gradient(ellipse at 100% 0%, rgba(130, 193, 163, 0.42), transparent 46%),
+        linear-gradient(145deg, rgba(225, 242, 231, 0.94), rgba(194, 224, 208, 0.88));
+    border-color: rgba(48, 116, 86, 0.38);
+    border-top: 3px solid #4f9b75;
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.96),
+        0 16px 38px rgba(35, 82, 63, 0.14);
+}
+
+main .projects-grid .project-card:hover {
+    background-color: rgba(204, 233, 216, 0.94);
+    background-image:
+        radial-gradient(ellipse at 100% 0%, rgba(106, 181, 143, 0.48), transparent 48%),
+        linear-gradient(145deg, rgba(235, 248, 239, 0.98), rgba(199, 230, 212, 0.94));
+    border-color: rgba(45, 125, 88, 0.62);
+    border-top-color: #347f5b;
+}
+
+main .projects-grid .project-visual {
+    background:
+        radial-gradient(circle at 50% 44%, rgba(118, 184, 146, 0.36), transparent 64%),
+        linear-gradient(135deg, rgba(187, 222, 199, 0.82), rgba(204, 228, 220, 0.9));
+    border-top-color: rgba(48, 116, 86, 0.18);
+    border-bottom-color: rgba(48, 116, 86, 0.18);
+}
+
+main .projects-grid .project-status {
+    color: #367451;
+}
+
+main .projects-grid .tag-list span {
+    background: rgba(217, 239, 224, 0.9);
+    border-color: rgba(48, 116, 86, 0.24);
+}
+
+/* Match skill cards to the seafoam glass styling used for project cards. */
+main #skills .skills-grid .skill-card {
+    background-color: rgba(192, 224, 207, 0.84);
+    background-image:
+        radial-gradient(ellipse at 100% 0%, rgba(130, 193, 163, 0.42), transparent 46%),
+        linear-gradient(145deg, rgba(225, 242, 231, 0.94), rgba(194, 224, 208, 0.88));
+    border-color: rgba(48, 116, 86, 0.38);
+    border-top: 3px solid #4f9b75;
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.96),
+        0 16px 38px rgba(35, 82, 63, 0.14);
+}
+
+main #skills .skills-grid .skill-card::after {
+    background: rgba(91, 174, 129, 0.2);
+}
+
+main #skills .skills-grid .skill-card:hover {
+    background-color: rgba(204, 233, 216, 0.94);
+    background-image:
+        radial-gradient(ellipse at 100% 0%, rgba(106, 181, 143, 0.48), transparent 48%),
+        linear-gradient(145deg, rgba(235, 248, 239, 0.98), rgba(199, 230, 212, 0.94));
+    border-color: rgba(45, 125, 88, 0.62);
+    border-top-color: #347f5b;
+    box-shadow:
+        inset 0 1px #fff,
+        0 22px 48px rgba(35, 82, 63, 0.18);
+}
+
+main #skills .skills-grid .skill-icon {
+    background: rgba(217, 239, 224, 0.9);
+    border-color: rgba(48, 116, 86, 0.28);
+    color: #367451;
+}
+
+/* Subtle entrance and hover motion for the glass portfolio cards. */
+@keyframes glass-card-enter {
+    from {
+        opacity: 0;
+        translate: 0 18px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+@keyframes ambient-glow-drift {
+    0%,
+    100% {
+        transform: translate3d(-2%, 0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(2%, 1.5%, 0) scale(1.04);
+    }
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: -15%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 18% 28%, rgba(131, 201, 165, 0.14), transparent 28%),
+        radial-gradient(ellipse at 82% 62%, rgba(136, 184, 194, 0.12), transparent 30%);
+    animation: ambient-glow-drift 18s ease-in-out infinite;
+}
+
+main .about-details .detail-card,
+main .skills-grid .skill-card,
+main .projects-grid .project-card,
+main .achievements-section .timeline-item,
+main .achievements-section .certification-note,
+main .contact-panel {
+    animation: glass-card-enter 650ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
+}
+
+main .about-details .detail-card:nth-child(2),
+main .skills-grid .skill-card:nth-child(2),
+main .projects-grid .project-card:nth-child(2),
+main .achievements-section .timeline-item:nth-child(2) {
+    animation-delay: 90ms;
+}
+
+main .about-details .detail-card:nth-child(3),
+main .skills-grid .skill-card:nth-child(3),
+main .projects-grid .project-card:nth-child(3),
+main .achievements-section .timeline-item:nth-child(3) {
+    animation-delay: 180ms;
+}
+
+main .skills-grid .skill-card:nth-child(4) {
+    animation-delay: 270ms;
+}
+
+main .skills-grid .skill-card:nth-child(5) {
+    animation-delay: 360ms;
+}
+
+main .skills-grid .skill-card:nth-child(6) {
+    animation-delay: 450ms;
+}
+
+main .about-details .detail-card,
+main .skills-grid .skill-card,
+main .projects-grid .project-card {
+    transition:
+        transform 260ms ease,
+        border-color 260ms ease,
+        box-shadow 260ms ease,
+        background-color 260ms ease;
+}
+
+main .about-details .detail-card:hover,
+main .skills-grid .skill-card:hover,
+main .projects-grid .project-card:hover {
+    transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::after,
+    main .about-details .detail-card,
+    main .skills-grid .skill-card,
+    main .projects-grid .project-card,
+    main .achievements-section .timeline-item,
+    main .achievements-section .certification-note,
+    main .contact-panel {
+        animation: none !important;
+    }
+
+    main .about-details .detail-card,
+    main .skills-grid .skill-card,
+    main .projects-grid .project-card {
+        transition: none !important;
+    }
+}
+
+/* Use the project-card glass treatment across all portfolio content boxes. */
+main .about-details .detail-card,
+main .achievements-section .timeline-item,
+main .achievements-section .certification-note {
+    background-color: rgba(192, 224, 207, 0.84);
+    background-image:
+        radial-gradient(ellipse at 100% 0%, rgba(130, 193, 163, 0.42), transparent 46%),
+        linear-gradient(145deg, rgba(225, 242, 231, 0.94), rgba(194, 224, 208, 0.88));
+    border: 1px solid rgba(48, 116, 86, 0.38);
+    border-top: 3px solid #4f9b75;
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.96),
+        0 16px 38px rgba(35, 82, 63, 0.14);
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+}
+
+main .about-details .detail-card:hover,
+main .achievements-section .timeline-item:hover,
+main .achievements-section .certification-note:hover {
+    background-color: rgba(204, 233, 216, 0.94);
+    background-image:
+        radial-gradient(ellipse at 100% 0%, rgba(106, 181, 143, 0.48), transparent 48%),
+        linear-gradient(145deg, rgba(235, 248, 239, 0.98), rgba(199, 230, 212, 0.94));
+    border-color: rgba(45, 125, 88, 0.62);
+    border-top-color: #347f5b;
+    box-shadow:
+        inset 0 1px #fff,
+        0 22px 48px rgba(35, 82, 63, 0.18);
+}
+
+main .achievements-section .timeline {
+    display: grid;
+    gap: 16px;
+}
+
+main .achievements-section .timeline::before,
+main .achievements-section .timeline-marker {
+    display: none;
+}
+
+main .achievements-section .timeline-item {
+    grid-template-columns: 105px 1fr;
+    gap: 32px;
+    margin: 0;
+    padding: 22px 24px;
+    border-radius: var(--radius-md);
+}
+
+main .achievements-section .timeline-content {
+    min-width: 0;
+}
+
+main .achievements-section .certification-note {
+    margin-top: 24px;
+    border-radius: var(--radius-md);
+}
+
+main .contact-panel {
+    border-top: 3px solid #4f9b75;
+}
+
+@media (max-width: 760px) {
+    main .achievements-section .timeline-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 19px;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    main .about-details .detail-card,
+    main .achievements-section .timeline-item,
+    main .achievements-section .certification-note {
+        background-color: #eaf4ed;
+        background-image: none;
+        border-color: rgba(54, 125, 101, 0.38);
+        box-shadow: 0 8px 22px rgba(35, 82, 63, 0.1);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
+/* Richer backdrop gives the translucent mint glass a distinct silhouette. */
+body {
+    background:
+        radial-gradient(ellipse at 8% 18%, rgba(114, 184, 151, 0.32), transparent 34%),
+        radial-gradient(ellipse at 92% 34%, rgba(136, 177, 190, 0.24), transparent 36%),
+        radial-gradient(ellipse at 44% 88%, rgba(153, 199, 170, 0.22), transparent 38%),
+        linear-gradient(145deg, #d3e4dc 0%, #dce8e4 48%, #d2e3df 100%);
+    background-attachment: fixed;
+}
+
+body::before {
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 22% 30%, rgba(244, 255, 248, 0.42), transparent 26%),
+        radial-gradient(ellipse at 78% 66%, rgba(117, 178, 160, 0.14), transparent 34%);
+}
+
+body > header,
+body > main,
+body > footer {
+    position: relative;
+    z-index: 1;
+}
+
+.hero {
+    background:
+        radial-gradient(ellipse at 78% 22%, rgba(129, 191, 162, 0.17), transparent 32%);
+}
+
+.about-section {
+    background:
+        linear-gradient(115deg, rgba(180, 211, 192, 0.48), rgba(206, 225, 213, 0.36));
+    border-top-color: rgba(55, 115, 87, 0.19);
+    border-bottom-color: rgba(55, 115, 87, 0.19);
+}
+
+.skills-section {
+    background:
+        radial-gradient(ellipse at 92% 18%, rgba(172, 208, 206, 0.3), transparent 34%);
+}
+
+.projects-section {
+    background:
+        linear-gradient(120deg, rgba(190, 215, 215, 0.52), rgba(202, 222, 216, 0.38));
+    border-top-color: rgba(59, 112, 111, 0.2);
+    border-bottom-color: rgba(59, 112, 111, 0.2);
+}
+
+.achievements-section {
+    background:
+        radial-gradient(ellipse at 8% 76%, rgba(165, 204, 177, 0.28), transparent 36%);
+}
+
+.contact-section {
+    background:
+        linear-gradient(180deg, transparent, rgba(177, 210, 194, 0.36));
+}
+
+.hero-content {
+    background:
+        linear-gradient(135deg, rgba(248, 255, 250, 0.76), rgba(209, 236, 220, 0.47));
+    border-color: rgba(255, 255, 255, 0.82);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        inset 1px 0 rgba(255, 255, 255, 0.5),
+        0 28px 70px rgba(31, 83, 63, 0.16);
+    backdrop-filter: blur(28px) saturate(155%);
+    -webkit-backdrop-filter: blur(28px) saturate(155%);
+}
+
+main .detail-card,
+main .skill-card,
+main .project-card,
+main .certification-note {
+    background-color: rgba(247, 255, 249, 0.46);
+    border-color: rgba(255, 255, 255, 0.78);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.96),
+        inset 1px 0 rgba(255, 255, 255, 0.42),
+        0 16px 38px rgba(35, 82, 63, 0.12);
+    backdrop-filter: blur(24px) saturate(145%);
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+}
+
+main .detail-card:hover,
+main .skill-card:hover,
+main .project-card:hover {
+    background-color: rgba(250, 255, 251, 0.64);
+    border-color: rgba(255, 255, 255, 0.96);
+    box-shadow:
+        inset 0 1px 0 #fff,
+        0 22px 48px rgba(35, 82, 63, 0.18);
+}
+
+main .project-card {
+    border-top-color: rgba(59, 139, 105, 0.8);
+}
+
+main .contact-panel {
+    background:
+        radial-gradient(ellipse at 92% 0%, rgba(130, 198, 158, 0.36), transparent 42%),
+        linear-gradient(135deg, rgba(248, 255, 250, 0.68), rgba(190, 222, 205, 0.53));
+    border-color: rgba(255, 255, 255, 0.86);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.98),
+        0 24px 58px rgba(35, 82, 63, 0.14);
+    backdrop-filter: blur(26px) saturate(150%);
+    -webkit-backdrop-filter: blur(26px) saturate(150%);
+}
+
+.site-footer {
+    background: rgba(184, 211, 194, 0.72);
+    border-top-color: rgba(52, 112, 82, 0.22);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .hero-content,
+    main .detail-card,
+    main .skill-card,
+    main .project-card,
+    main .certification-note,
+    main .contact-panel {
+        background-color: #eaf4ed;
+        background-image: none;
+        border-color: rgba(54, 125, 101, 0.38);
+        box-shadow: 0 8px 22px rgba(35, 82, 63, 0.1);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
+/* Make the frosted-glass treatment unmistakable while keeping the text crisp. */
+.hero-content {
+    padding: clamp(24px, 3.5vw, 42px);
+    border: 1px solid rgba(255, 255, 255, 0.68);
+    border-radius: 28px;
+    background:
+        linear-gradient(135deg, rgba(250, 255, 251, 0.68), rgba(220, 240, 228, 0.34));
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.92),
+        0 24px 60px rgba(34, 91, 67, 0.1);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+}
+
+.hero-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border: 1px solid rgba(54, 125, 101, 0.2);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.hero-content .eyebrow,
+.hero-content h1,
+.hero-content .hero-description,
+.hero-content .hero-actions,
+.hero-content .hero-meta {
+    position: relative;
+}
+
+.hero-content .hero-actions .button {
+    border-color: rgba(54, 125, 101, 0.3);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.72), 0 7px 18px rgba(38, 76, 59, 0.07);
+}
+
+.hero-content .hero-actions .button-primary {
+    background: linear-gradient(135deg, rgba(103, 174, 140, 0.96), rgba(66, 139, 106, 0.96));
+    border-color: rgba(48, 115, 86, 0.55);
+    color: #f7fffa;
+}
+
+.hero-content .hero-actions .button-primary:hover {
+    background: linear-gradient(135deg, #75bc98, #4d9b78);
+}
+
+main .detail-card,
+main .skill-card,
+main .project-card,
+main .certification-note,
+main .contact-panel {
+    border-color: rgba(64, 139, 108, 0.34);
+    background-image:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.54), rgba(219, 241, 228, 0.28));
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.92),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+        0 14px 34px rgba(34, 91, 67, 0.1);
+    backdrop-filter: blur(20px) saturate(135%);
+    -webkit-backdrop-filter: blur(20px) saturate(135%);
+}
+
+main .detail-card:hover,
+main .skill-card:hover,
+main .project-card:hover {
+    border-color: rgba(50, 130, 98, 0.62);
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.98),
+        0 18px 40px rgba(34, 91, 67, 0.16);
+}
+
+main .skill-card {
+    background-image:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.64), rgba(205, 232, 215, 0.38));
+}
+
+main .project-card {
+    background-image: linear-gradient(145deg, rgba(250, 255, 251, 0.7), rgba(218, 238, 225, 0.42));
+}
+
+.terminal-card {
+    border-color: rgba(123, 207, 166, 0.42);
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.12),
+        0 30px 90px rgba(18, 54, 38, 0.24),
+        0 0 45px rgba(112, 175, 144, 0.12);
+}
+
+.terminal-header,
+.terminal-footer {
+    background-color: rgba(224, 245, 232, 0.055);
+}
+
+main .social-links .social-link,
+.button-secondary,
+.nav-links .nav-contact {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(213, 237, 222, 0.46));
+    border-color: rgba(54, 125, 101, 0.4);
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.9),
+        0 8px 20px rgba(38, 76, 59, 0.09);
+}
+
+@media (max-width: 760px) {
+    .hero-content {
+        padding: 24px 20px;
+        border-radius: 22px;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .hero-content,
+    main .detail-card,
+    main .skill-card,
+    main .project-card,
+    main .certification-note,
+    main .contact-panel,
+    .hero-content .hero-actions .button {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
