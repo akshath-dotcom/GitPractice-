@@ -1,6 +1,6 @@
 /* =========================================================
    AKSHATH PORTFOLIO — SHADOW DEVELOPER
-   Theme: Near-black + neon green
+   Theme: Light sage + green with a dark terminal accent
    Stack: HTML5 + CSS3 + Vanilla JavaScript
    ========================================================= */
 
@@ -210,7 +210,7 @@ a:focus-visible {
 
     font-size: 29px;
     font-weight: 700;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
 }
 
 .logo span {
@@ -2818,4 +2818,440 @@ body {
 
 .exe-recruiter-card .exe-btn-primary:hover {
   box-shadow: 0 0 20px rgba(163, 255, 104, 0.28);
+}
+
+/* Balanced sage theme for the public portfolio; AKSHATH.EXE keeps its dark desktop. */
+:root {
+    --bg: #e9ede6;
+    --bg-soft: #e1e7de;
+    --surface: #f0f3ed;
+    --surface-hover: #f5f7f2;
+
+    --accent: #426f38;
+    --accent-bright: #345d2c;
+    --accent-dark: #557b49;
+
+    --text: #202820;
+    --text-soft: #4e594c;
+    --text-muted: #687264;
+
+    --border: rgba(51, 78, 46, 0.16);
+    --border-strong: rgba(51, 78, 46, 0.38);
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    color-scheme: light;
+}
+
+body::before {
+    background:
+        radial-gradient(ellipse at 78% 8%, rgba(157, 178, 143, 0.2), transparent 38%),
+        radial-gradient(ellipse at 8% 58%, rgba(190, 199, 181, 0.2), transparent 35%);
+}
+
+::selection {
+    background: #c3d2b9;
+    color: #202820;
+}
+
+.site-header {
+    background: rgba(233, 237, 230, 0.92);
+    border-bottom-color: rgba(29, 41, 27, 0.1);
+}
+
+.nav-links .nav-contact:hover {
+    color: #fff;
+}
+
+.button-secondary {
+    background: rgba(245, 247, 242, 0.72);
+    border-color: rgba(29, 41, 27, 0.16);
+}
+
+.button-secondary:hover {
+    color: var(--accent);
+}
+
+.about-section,
+.projects-section {
+    border-top-color: rgba(29, 41, 27, 0.07);
+    border-bottom-color: rgba(29, 41, 27, 0.07);
+}
+
+main .detail-card {
+    background: rgba(245, 247, 242, 0.72);
+    border-color: rgba(29, 41, 27, 0.1);
+}
+
+main .detail-card:hover {
+    background: #f5f7f2;
+}
+
+main .skill-card {
+    background: linear-gradient(145deg, #f2f5ef, #e9eee6);
+    border-color: rgba(29, 41, 27, 0.1);
+    box-shadow: 0 8px 24px rgba(38, 50, 34, 0.055);
+}
+
+main .skill-card:hover {
+    background: #f4f6f1;
+}
+
+main .skill-icon {
+    background: #e2eadc;
+}
+
+main .project-card {
+    background: #f0f3ed;
+    border-color: rgba(29, 41, 27, 0.1);
+    box-shadow: 0 8px 24px rgba(38, 50, 34, 0.055);
+}
+
+main .project-top .project-symbol {
+    border-color: rgba(29, 41, 27, 0.14);
+}
+
+main .project-visual {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(145, 170, 129, 0.22), transparent 70%),
+        #e6ebe2;
+    border-color: rgba(29, 41, 27, 0.08);
+}
+
+main .project-window,
+main .task-interface {
+    background: #f3f5f0;
+}
+
+main .project-graphic {
+    background: #f3f5f0;
+}
+
+main .graphic-circle {
+    color: #fff;
+}
+
+main .graphic-box {
+    background: #e6ece1;
+}
+
+main .chain-node {
+    background: #f2f5ef;
+}
+
+main .task-heading {
+    border-bottom-color: rgba(29, 41, 27, 0.1);
+}
+
+main .tag-list span {
+    background: #e7ece3;
+    border-color: rgba(29, 41, 27, 0.11);
+}
+
+main .project-link {
+    border-top-color: rgba(29, 41, 27, 0.1);
+}
+
+main .timeline-marker {
+    background: var(--bg);
+}
+
+main .certification-note {
+    background: #e5ebe1;
+}
+
+main .contact-panel {
+    background:
+        radial-gradient(ellipse at 90% 10%, rgba(157, 178, 143, 0.24), transparent 45%),
+        linear-gradient(135deg, #f0f3ed, #e2e9de);
+    box-shadow: 0 18px 50px rgba(38, 50, 34, 0.07);
+}
+
+main .social-links {
+    border-top-color: rgba(29, 41, 27, 0.1);
+}
+
+.site-footer {
+    background: #dfe6dc;
+    border-top-color: rgba(29, 41, 27, 0.09);
+}
+
+.copyright {
+    border-top-color: rgba(29, 41, 27, 0.09);
+}
+
+@media (max-width: 760px) {
+    .nav-links {
+        background: rgba(233, 237, 230, 0.98);
+    }
+}
+
+/* Refined edge details to give the light surfaces more definition. */
+.section-heading .eyebrow::after {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), rgba(66, 111, 56, 0.12));
+}
+
+main .detail-card,
+main .skill-card {
+    border-color: rgba(66, 91, 57, 0.22);
+    box-shadow: inset 3px 0 0 rgba(66, 111, 56, 0.42), 0 8px 24px rgba(38, 50, 34, 0.045);
+}
+
+main .detail-card:hover,
+main .skill-card:hover {
+    border-color: rgba(66, 111, 56, 0.52);
+    box-shadow: inset 3px 0 0 var(--accent), 0 12px 28px rgba(38, 50, 34, 0.09);
+}
+
+main .project-card {
+    border-color: rgba(66, 91, 57, 0.24);
+    border-top: 2px solid rgba(66, 111, 56, 0.58);
+}
+
+main .project-card:hover {
+    border-color: rgba(66, 111, 56, 0.58);
+    border-top-color: var(--accent);
+    box-shadow: 0 16px 34px rgba(38, 50, 34, 0.12);
+}
+
+main .certification-note {
+    border-color: rgba(66, 91, 57, 0.24);
+    box-shadow: inset 3px 0 0 rgba(66, 111, 56, 0.5);
+}
+
+main .contact-panel {
+    border-color: rgba(66, 91, 57, 0.3);
+    box-shadow: 0 18px 50px rgba(38, 50, 34, 0.07), inset 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.button-secondary,
+.nav-links .nav-contact {
+    border-color: rgba(66, 91, 57, 0.32);
+}
+
+.button-secondary:hover,
+.nav-links .nav-contact:hover {
+    border-color: var(--accent);
+}
+
+main .social-links {
+    align-items: center;
+    gap: 12px;
+    border-top-color: rgba(66, 91, 57, 0.18);
+}
+
+main .social-links .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 9px 16px;
+    border: 1px solid rgba(91, 111, 75, 0.34);
+    border-radius: 999px;
+    background: rgba(237, 241, 231, 0.76);
+    color: #394a35;
+    box-shadow: 0 2px 7px rgba(38, 50, 34, 0.045);
+    transition:
+        transform var(--transition),
+        color var(--transition),
+        background var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+}
+
+main .social-links .social-link span {
+    color: #718c5d;
+}
+
+main .social-links .social-link:hover {
+    transform: translateY(-2px);
+    border-color: #718c5d;
+    background: #e3eadc;
+    color: #263a27;
+    box-shadow: 0 6px 14px rgba(38, 50, 34, 0.1);
+}
+
+main a:focus-visible,
+main button:focus-visible {
+    outline-color: var(--accent);
+    outline-offset: 4px;
+}
+
+/* Mint glass surfaces for the public portfolio. */
+:root {
+    --bg: #e5eee9;
+    --bg-soft: #dce9e2;
+    --surface: rgba(247, 251, 248, 0.64);
+    --surface-hover: rgba(250, 253, 251, 0.82);
+
+    --accent: #367d65;
+    --accent-bright: #286b55;
+    --accent-dark: #4c9277;
+
+    --text: #1d2b27;
+    --text-soft: #4a5f57;
+    --text-muted: #687b73;
+
+    --border: rgba(54, 125, 101, 0.2);
+    --border-strong: rgba(54, 125, 101, 0.42);
+}
+
+body {
+    background:
+        radial-gradient(ellipse at 12% 12%, rgba(174, 218, 198, 0.48), transparent 38%),
+        radial-gradient(ellipse at 88% 38%, rgba(193, 220, 205, 0.48), transparent 36%),
+        linear-gradient(135deg, #e5eee9, #dfe9e3 55%, #e9f0eb);
+    background-attachment: fixed;
+    color: var(--text);
+}
+
+body::before {
+    background:
+        radial-gradient(ellipse at 70% 8%, rgba(111, 177, 147, 0.16), transparent 34%),
+        radial-gradient(ellipse at 18% 68%, rgba(171, 206, 186, 0.2), transparent 38%);
+}
+
+::selection {
+    background: #a9d8c2;
+    color: #19372d;
+}
+
+.site-header {
+    background: rgba(232, 242, 236, 0.72);
+    border-bottom-color: rgba(54, 125, 101, 0.18);
+    box-shadow: 0 8px 28px rgba(38, 76, 59, 0.06);
+    backdrop-filter: blur(18px) saturate(125%);
+    -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+
+.about-section,
+.projects-section {
+    background: rgba(211, 228, 218, 0.34);
+    border-color: rgba(54, 125, 101, 0.13);
+}
+
+main .detail-card,
+main .skill-card,
+main .project-card,
+main .certification-note {
+    background-color: rgba(246, 251, 247, 0.62);
+    border-color: rgba(54, 125, 101, 0.28);
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.78),
+        0 10px 30px rgba(38, 76, 59, 0.075);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+}
+
+main .detail-card:hover,
+main .skill-card:hover,
+main .project-card:hover {
+    background-color: rgba(250, 253, 251, 0.82);
+    border-color: rgba(54, 125, 101, 0.54);
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.9),
+        0 16px 36px rgba(38, 76, 59, 0.13);
+}
+
+main .skill-card {
+    background-image: linear-gradient(145deg, rgba(250, 253, 251, 0.72), rgba(222, 237, 227, 0.55));
+}
+
+main .skill-icon {
+    background: rgba(196, 228, 210, 0.62);
+    border-color: rgba(54, 125, 101, 0.25);
+}
+
+main .project-card {
+    border-top: 2px solid rgba(54, 125, 101, 0.62);
+}
+
+main .project-visual {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(139, 197, 164, 0.25), transparent 70%),
+        rgba(221, 235, 226, 0.72);
+    border-color: rgba(54, 125, 101, 0.16);
+}
+
+main .project-window,
+main .task-interface,
+main .project-graphic,
+main .chain-node {
+    background-color: rgba(242, 249, 244, 0.78);
+}
+
+main .graphic-box {
+    background: rgba(216, 235, 222, 0.86);
+}
+
+main .tag-list span {
+    background: rgba(215, 234, 222, 0.72);
+    border-color: rgba(54, 125, 101, 0.22);
+}
+
+main .contact-panel {
+    background:
+        radial-gradient(ellipse at 92% 8%, rgba(146, 205, 170, 0.32), transparent 42%),
+        linear-gradient(135deg, rgba(247, 251, 248, 0.78), rgba(218, 235, 224, 0.68));
+    border-color: rgba(54, 125, 101, 0.34);
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, 0.85),
+        0 20px 54px rgba(38, 76, 59, 0.1);
+    backdrop-filter: blur(16px) saturate(125%);
+    -webkit-backdrop-filter: blur(16px) saturate(125%);
+}
+
+main .social-links .social-link,
+.button-secondary,
+.nav-links .nav-contact {
+    background: rgba(247, 251, 248, 0.56);
+    border-color: rgba(54, 125, 101, 0.34);
+    color: #2e5547;
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.8), 0 5px 15px rgba(38, 76, 59, 0.06);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+main .social-links .social-link:hover,
+.button-secondary:hover,
+.nav-links .nav-contact:hover {
+    background: rgba(209, 234, 218, 0.82);
+    border-color: rgba(54, 125, 101, 0.58);
+    color: #204b3a;
+}
+
+.site-footer {
+    background: rgba(207, 225, 214, 0.74);
+    border-top-color: rgba(54, 125, 101, 0.16);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+@media (max-width: 760px) {
+    .nav-links {
+        background: rgba(232, 242, 236, 0.94);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    main .detail-card,
+    main .skill-card,
+    main .project-card,
+    main .certification-note,
+    main .contact-panel,
+    main .social-links .social-link,
+    .button-secondary,
+    .nav-links .nav-contact,
+    .site-header,
+    .site-footer {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
 }
