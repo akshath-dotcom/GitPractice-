@@ -24,15 +24,49 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: seating-app/package-lock.json
+
+      - name: Install seating app dependencies
+        working-directory: seating-app
+        run: npm ci
+
+      - name: Verify Supabase configuration
+        working-directory: seating-app
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$VITE_SUPABASE_URL" || { echo "Set the VITE_SUPABASE_URL repository secret."; exit 1; }
+          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "Set the VITE_SUPABASE_ANON_KEY repository secret."; exit 1; }
+
+      - name: Build seating app
+        working-directory: seating-app
+        env:
+          VITE_BASE_PATH: /GitPractice-/seating-app/
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload portfolio site
+      - name: Assemble GitHub Pages site
+        run: |
+          mkdir -p _site/seating-app
+          cp -R potfolio/. _site/
+          cp -R seating-app/dist/. _site/seating-app/
+
+      - name: Upload GitHub Pages site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: potfolio
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExamSeat — Seating Arrangement Portal</title>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png" />
+    <script>
+      window.addEventListener('error', function (e) {
+        var el = document.getElementById('boot-error');
+        if (!el) {
+          el = document.createElement('pre');
+          el.id = 'boot-error';
+          el.style.cssText =
+            'position:fixed;inset:auto 16px 16px 16px;z-index:99999;background:#7f1d1d;color:#fff;padding:16px;border-radius:12px;font:12px/1.5 monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
+          document.body.appendChild(el);
+        }
+        el.textContent += (el.textContent ? '\n' : '') + (e.message || e.error);
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        var el = document.getElementById('boot-error');
+        if (!el) {
+          el = document.createElement('pre');
+          el.id = 'boot-error';
+          el.style.cssText =
+            'position:fixed;inset:auto 16px 16px 16px;z-index:99999;background:#7f1d1d;color:#fff;padding:16px;border-radius:12px;font:12px/1.5 monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
+          document.body.appendChild(el);
+        }
+        el.textContent += (el.textContent ? '\n' : '') + String(e.reason);
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
