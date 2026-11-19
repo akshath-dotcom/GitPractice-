@@ -36,6 +36,10 @@ export async function importSeatingPdf(
   onProgress(2, 'Reading PDF…');
   const { pages, totalPages } = await parsePdf(file, (page, total) => {
     onProgress(5 + Math.round((page / total) * 70), `Extracting page ${page} of ${total}…`);
+  }, {
+    examDate: opts.examDate,
+    session: opts.session,
+    classroom: opts.classroom,
   });
 
   // Attach page-wide context (date/session overrides) and collect all records.
@@ -52,6 +56,11 @@ export async function importSeatingPdf(
     }
   }
   const recordsExtracted = extracted.length;
+  if (recordsExtracted === 0) {
+    processingErrors.push(
+      'No seating records were extracted. Check the exam date/session overrides and confirm the PDF contains selectable text; scanned image-only PDFs need OCR.',
+    );
+  }
 
   const valid = extracted.filter((r) => {
     const ok = r.examDate && r.session && r.registerNumber.length >= 6;

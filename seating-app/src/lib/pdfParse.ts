@@ -1,5 +1,5 @@
 import * as pdfjs from 'pdfjs-dist';
-import type { TextItem } from 'pdfjs-dist/types/src/display/api';
+import type { PDFPageProxy, TextItem } from 'pdfjs-dist/types/src/display/api';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `${import.meta.env.BASE_URL}pdf.worker.min.mjs`;
 
@@ -18,6 +18,12 @@ export interface PageParseResult {
   pageNumber: number;
   records: ParsedRecord[];
   error?: string;
+}
+
+export interface ParseOverrides {
+  examDate?: string;
+  session?: 'FN' | 'AN';
+  classroom?: string;
 }
 
 const MONTHS: Record<string, number> = {
@@ -50,10 +56,6 @@ export function normalizeDate(raw: string): string | null {
     if (mo) return `${m[3]}-${pad2(mo)}-${pad2(m[2])}`;
   }
 
-  const d = new Date(s);
-  if (!Number.isNaN(d.getTime())) {
-    return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-  }
   return null;
 }
 
@@ -86,7 +88,10 @@ interface Row {
  *  - Column/table layouts (register no | date | session | room | row | seat)
  *  - Date/session headers followed by lines of "register no room row seat"
  */
-export async function parsePage(page: any): Promise<ParsedRecord[]> {
+export async function parsePage(
+  page: PDFPageProxy,
+  overrides: ParseOverrides = {},
+): Promise<ParsedRecord[]> {
   const content = await page.getTextContent();
   const items = (content.items as TextItem[]).filter((it) => it.str && it.str.trim() !== '');
 
@@ -108,9 +113,9 @@ export async function parsePage(page: any): Promise<ParsedRecord[]> {
   }
 
   // Context inherited from header lines on the page.
-  let ctxDate: string | null = null;
-  let ctxSession: 'FN' | 'AN' | null = null;
-  let ctxRoom: string | null = null;
+  let ctxDate: string | null = overrides.examDate ?? null;
+  let ctxSession: 'FN' | 'AN' | null = overrides.session ?? null;
+  let ctxRoom: string | null = overrides.classroom ?? null;
   let ctxBuilding: string | null = null;
   let ctxFloor: string | null = null;
 
@@ -223,6 +228,7 @@ export async function parsePage(page: any): Promise<ParsedRecord[]> {
 export async function parsePdf(
   file: File,
   onProgress?: (page: number, total: number) => void,
+  overrides: ParseOverrides = {},
 ): Promise<{ pages: PageParseResult[]; totalPages: number }> {
   const data = await file.arrayBuffer();
   const doc = await pdfjs.getDocument({ data }).promise;
@@ -232,7 +238,7 @@ export async function parsePdf(
   for (let i = 1; i <= totalPages; i++) {
     try {
       const page = await doc.getPage(i);
-      const records = await parsePage(page);
+      const records = await parsePage(page, overrides);
       pages.push({ pageNumber: i, records });
       onProgress?.(i, totalPages);
     } catch (err) {

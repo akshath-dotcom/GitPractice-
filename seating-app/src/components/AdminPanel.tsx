@@ -188,7 +188,13 @@ export function AdminPanel() {
           <div className="flex items-center gap-3">
             <CheckCircle2 className="w-7 h-7 text-emerald-600" />
             <div>
-              <h3 className="text-2xl font-bold text-emerald-900">Seating Arrangement Successfully Imported!</h3>
+              <h3 className="text-2xl font-bold text-emerald-900">
+                {stats.recordsExtracted === 0
+                  ? 'No Seating Records Extracted'
+                  : stats.recordsSaved > 0
+                    ? 'Seating Arrangement Successfully Imported!'
+                    : 'No New Records Saved'}
+              </h3>
               <p className="text-sm text-emerald-800">{stats.fileName}</p>
             </div>
           </div>

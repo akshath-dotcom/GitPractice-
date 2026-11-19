@@ -44,6 +44,14 @@ jobs:
           test -n "$VITE_SUPABASE_URL" || { echo "Set the VITE_SUPABASE_URL repository secret."; exit 1; }
           test -n "$VITE_SUPABASE_ANON_KEY" || { echo "Set the VITE_SUPABASE_ANON_KEY repository secret."; exit 1; }
 
+      - name: Test PDF parser
+        working-directory: seating-app
+        run: npm test
+
+      - name: Typecheck seating app
+        working-directory: seating-app
+        run: npm run typecheck
+
       - name: Build seating app
         working-directory: seating-app
         env:
