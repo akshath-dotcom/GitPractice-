@@ -1,10 +1,39 @@
 import { useState } from 'react';
-import { Search, CalendarDays, Sunrise, Sunset, Loader2, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Search, CalendarDays, Sunrise, Sunset, Loader2, MapPin, AlertCircle, CheckCircle2, Armchair } from 'lucide-react';
 import { searchSeating } from '@/lib/importSeating';
 import type { SeatingRecordRow } from '@/lib/supabase';
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
+}
+
+function TheaterSeat({ row, seat }: { row: string | null; seat: string | null }) {
+  return (
+    <div
+      role="img"
+      aria-label={`Assigned seat${row ? `, row ${row}` : ''}${seat ? `, seat ${seat}` : ''}`}
+      className="overflow-hidden rounded-2xl bg-slate-950 px-5 py-7 text-white"
+    >
+      <div className="mx-auto max-w-sm">
+        <div className="mx-auto h-3 w-4/5 rounded-[50%] border-t-4 border-emerald-300/80 shadow-[0_-8px_24px_rgba(52,211,153,0.12)]" />
+        <p className="mt-2 text-center text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400">
+          Front of room
+        </p>
+
+        <div className="mt-8 flex items-center justify-center gap-5">
+          <div className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-center">
+            <p className="text-[10px] uppercase tracking-wider text-slate-400">Row</p>
+            <p className="font-mono text-lg font-bold">{row ?? '—'}</p>
+          </div>
+          <div className="flex min-w-24 flex-col items-center rounded-2xl border border-emerald-300/40 bg-emerald-400/15 px-5 py-3 text-emerald-200 shadow-lg shadow-emerald-950/30">
+            <Armchair className="h-8 w-8" strokeWidth={1.8} />
+            <span className="mt-1 text-[10px] font-semibold uppercase tracking-wider">Your seat</span>
+            <span className="font-mono text-2xl font-bold">{seat ?? '—'}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function StudentSearch() {
@@ -141,13 +170,14 @@ export function StudentSearch() {
                     </span>
                   )}
                 </div>
-                <dl className="grid grid-cols-2 md:grid-cols-5 divide-x divide-slate-100">
+                <div className="p-5 md:p-6">
+                  <TheaterSeat row={r.row_number} seat={r.seat_number} />
+                </div>
+                <dl className="grid grid-cols-2 md:grid-cols-3 divide-x divide-slate-100 border-t border-slate-100">
                   {[
                     ['Classroom', r.classroom],
                     ['Building', r.building],
                     ['Floor', r.floor],
-                    ['Row', r.row_number],
-                    ['Seat', r.seat_number],
                   ].map(([label, value]) => (
                     <div key={label} className="px-6 py-5 text-center">
                       <dt className="text-xs uppercase tracking-wide text-slate-400 font-medium">{label}</dt>

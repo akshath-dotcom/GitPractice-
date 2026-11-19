@@ -60,7 +60,8 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-200 py-6 text-center text-sm text-slate-400">
-        Seating data is stored permanently in the exam database.
+        <p>Seating data is stored permanently in the exam database.</p>
+        <p className="mt-1">Designed and built by Akshath</p>
       </footer>
     </div>
   );
