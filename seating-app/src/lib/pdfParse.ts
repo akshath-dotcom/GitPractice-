@@ -24,6 +24,7 @@ export interface ParseOverrides {
   examDate?: string;
   session?: 'FN' | 'AN';
   classroom?: string;
+  building?: string;
 }
 
 const MONTHS: Record<string, number> = {
@@ -79,7 +80,133 @@ function cleanCell(token: string | undefined | null): string | null {
 
 interface Row {
   cells: string[];
+  items: TextItem[];
   y: number;
+}
+
+interface HeaderContext {
+  examDate: string | null;
+  session: 'FN' | 'AN' | null;
+  building: string | null;
+}
+
+function detectHeaderContext(items: TextItem[]): HeaderContext {
+  const fullText = items.map((item) => item.str).join(' ');
+  const normalizedText = fullText.replace(/(\d)\s*[-/.]\s*(\d)/g, '$1-$2');
+  const dateMatch = normalizedText.match(
+    /\b(?:\d{1,2}-\d{1,2}-\d{4}|\d{4}-\d{1,2}-\d{1,2}|\d{1,2}\s*[-/.]\s*[A-Za-z]{3,}\s*[-/.]\s*\d{4}|[A-Za-z]{3,}\s*[-/.]\s*\d{1,2},?\s*[-/.]\s*\d{4})\b/,
+  );
+  const sessionMatch = fullText.match(/\b(FN|AN|FORENOON|AFTERNOON|MORNING|EVENING)\b/i);
+  const buildingMatch = fullText.match(/\bMAIN\s+AUDITORIUM\b/i);
+  return {
+    examDate: dateMatch ? normalizeDate(dateMatch[0].replace(/\s*([-/.])\s*/g, '$1')) : null,
+    session: sessionMatch ? normalizeSession(sessionMatch[1]) : null,
+    building: buildingMatch?.[0] ?? null,
+  };
+}
+
+function parseHallAllocation(
+  items: TextItem[],
+  rows: Row[],
+  overrides: ParseOverrides,
+): ParsedRecord[] | null {
+  const fullText = items.map((item) => item.str).join(' ');
+  if (!/HALL\s+ALLOCATION/i.test(fullText) && !/TOTAL\s+NO[\s.]*OF\s+STUDENTS/i.test(fullText)) {
+    return null;
+  }
+
+  const hallMarkers = items
+    .filter((item) => item.transform[4] < 60 && /^[A-Z](?:\s*&\s*[A-Z])?$/i.test(item.str.trim()))
+    .map((item) => ({ label: item.str.trim().replace(/\s+/g, ''), y: item.transform[5] }))
+    .sort((a, b) => b.y - a.y);
+  const totals = items
+    .filter((item) => item.transform[4] >= 550 && /^\d{1,3}$/.test(item.str.trim()))
+    .map((item) => ({ count: Number(item.str.trim()), y: item.transform[5] }));
+  const hallCounts = hallMarkers.map((hall) => {
+    const total = totals
+      .filter((candidate) => Math.abs(candidate.y - hall.y) <= 6)
+      .sort((a, b) => Math.abs(a.y - hall.y) - Math.abs(b.y - hall.y))[0];
+    return total ? { ...hall, count: total.count } : null;
+  }).filter((hall): hall is { label: string; y: number; count: number } => hall !== null);
+  if (hallCounts.length === 0) return null;
+
+  const registerNumbers: string[] = [];
+  let prefix = '';
+  for (const row of rows) {
+    const line = row.items.map((item) => item.str).join(' ');
+    if (/TOTAL\s+NO|REGISTER\s+NO/i.test(line)) continue;
+
+    const registerCells = row.items
+      .filter((item) => item.transform[4] >= 360 && item.transform[4] < 550)
+      .sort((a, b) => a.transform[4] - b.transform[4]);
+    let text = '';
+    let end = -Infinity;
+    const chunks: string[] = [];
+    for (const item of registerCells) {
+      const x = item.transform[4];
+      if (!item.str.trim()) {
+        if (text) chunks.push(text);
+        text = '';
+        end = -Infinity;
+        continue;
+      }
+      if (text && x - end > 1) {
+        chunks.push(text);
+        text = '';
+      }
+      text += item.str.trim();
+      end = x + item.width;
+    }
+    if (text) chunks.push(text);
+
+    for (const token of chunks.join(' ').split(',')) {
+      const value = token.replace(/\(\s*\d+\s*\)/g, '').trim();
+      if (/^\d{10,15}$/.test(value)) {
+        prefix = value.slice(0, -3);
+        registerNumbers.push(value);
+      } else if (prefix && /^\d{1,3}$/.test(value)) {
+        registerNumbers.push(`${prefix}${value.padStart(3, '0')}`);
+      }
+    }
+  }
+
+  const header = detectHeaderContext(items);
+  const examDate = overrides.examDate ?? header.examDate;
+  const session = overrides.session ?? header.session;
+  if (!examDate || !session) return [];
+
+  const building = overrides.building ?? fullText.match(/\bMAIN\s+AUDITORIUM\b/i)?.[0] ?? null;
+  const expectedRecords = hallCounts.reduce((sum, hall) => sum + hall.count, 0);
+  const hallCountsMatch = registerNumbers.length === expectedRecords;
+  const records: ParsedRecord[] = [];
+  let index = 0;
+  for (const hall of hallCounts) {
+    for (let i = 0; i < hall.count && index < registerNumbers.length; i++, index++) {
+      records.push({
+        registerNumber: registerNumbers[index],
+        examDate,
+        session,
+        classroom: overrides.classroom ?? (hallCountsMatch ? `Hall ${hall.label}` : null),
+        building,
+        floor: null,
+        rowNumber: null,
+        seatNumber: null,
+      });
+    }
+  }
+  for (; index < registerNumbers.length; index++) {
+    records.push({
+      registerNumber: registerNumbers[index],
+      examDate,
+      session,
+      classroom: overrides.classroom ?? null,
+      building,
+      floor: null,
+      rowNumber: null,
+      seatNumber: null,
+    });
+  }
+  return records;
 }
 
 /**
@@ -102,29 +229,33 @@ export async function parsePage(
     const y = Math.round(it.transform[5]);
     let row = rows.find((r) => Math.abs(r.y - y) <= 3);
     if (!row) {
-      row = { cells: [], y };
+      row = { cells: [], items: [], y };
       rows.push(row);
     }
     row.cells.push(it.str.trim());
+    row.items.push(it);
   }
   rows.sort((a, b) => b.y - a.y);
   for (const r of rows) {
     r.cells = r.cells.filter((c, i) => c !== '' || i === 0 || r.cells[i - 1] !== '');
   }
 
-  // Context inherited from header lines on the page.
-  let ctxDate: string | null = overrides.examDate ?? null;
-  let ctxSession: 'FN' | 'AN' | null = overrides.session ?? null;
-  let ctxRoom: string | null = overrides.classroom ?? null;
-  let ctxBuilding: string | null = null;
-  let ctxFloor: string | null = null;
-
   const records: ParsedRecord[] = [];
   const fullText = items.map((i) => i.str).join(' ');
+  const hallAllocationRecords = parseHallAllocation(items, rows, overrides);
+  if (hallAllocationRecords) return hallAllocationRecords;
+  const headerContext = detectHeaderContext(items);
+
+  // Context inherited from header lines on the page.
+  let ctxDate: string | null = overrides.examDate ?? headerContext.examDate;
+  let ctxSession: 'FN' | 'AN' | null = overrides.session ?? headerContext.session;
+  let ctxRoom: string | null = overrides.classroom ?? null;
+  let ctxBuilding: string | null = overrides.building ?? null;
+  let ctxFloor: string | null = null;
 
   // Page-level context, e.g. "B.Tech II Year II Sem", "Block A", "First Floor"
   const buildingMatch = fullText.match(/\b((?:[A-Z][A-Za-z&.\- ]{0,20})\s?(?:Block|Building|Hall|Annexe|Annex))\b/);
-  if (buildingMatch) ctxBuilding = buildingMatch[1].trim();
+  if (!ctxBuilding && buildingMatch) ctxBuilding = buildingMatch[1].trim();
   const floorMatch = fullText.match(/\b(Ground|First|Second|Third|Fourth|Fifth)\s+Floor\b/i);
   if (floorMatch) ctxFloor = `${floorMatch[1]} Floor`;
 
@@ -156,10 +287,10 @@ export async function parsePage(
 
     // Header line carrying a date and/or session?
     const dateInLine = line.match(
-      /\b(\d{1,2}[-/. ][A-Za-z]{3,}[-/. ]\d{4}|\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}|\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|[A-Za-z]{3,}[-/. ]\d{1,2},?[-/. ]\d{4})\b/,
+      /\b(\d{1,2}\s*[-/.]\s*[A-Za-z]{3,}\s*[-/.]\s*\d{4}|\d{1,2}\s*[-/.]\s*\d{1,2}\s*[-/.]\s*\d{2,4}|\d{4}\s*[-/.]\s*\d{1,2}\s*[-/.]\s*\d{1,2}|[A-Za-z]{3,}\s*[-/.]\s*\d{1,2},?\s*[-/.]\s*\d{4})\b/,
     );
     if (dateInLine) {
-      const nd = normalizeDate(dateInLine[1]);
+      const nd = normalizeDate(dateInLine[1].replace(/\s*([-/.])\s*/g, '$1'));
       if (nd) ctxDate = nd;
     }
     if (/\bFN\b|\bFORENOON\b|\bFORE\s*NOON\b|\bMORNING\b/.test(upper)) ctxSession = 'FN';
@@ -234,11 +365,24 @@ export async function parsePdf(
   const doc = await pdfjs.getDocument({ data }).promise;
   const totalPages = doc.numPages;
   const pages: PageParseResult[] = [];
+  let inheritedDate = overrides.examDate;
+  let inheritedSession = overrides.session;
+  let inheritedBuilding = overrides.building;
 
   for (let i = 1; i <= totalPages; i++) {
     try {
       const page = await doc.getPage(i);
-      const records = await parsePage(page, overrides);
+      const content = await page.getTextContent();
+      const pageContext = detectHeaderContext(content.items as TextItem[]);
+      inheritedDate = overrides.examDate ?? pageContext.examDate ?? inheritedDate;
+      inheritedSession = overrides.session ?? pageContext.session ?? inheritedSession;
+      inheritedBuilding = overrides.building ?? pageContext.building ?? inheritedBuilding;
+      const records = await parsePage(page, {
+        ...overrides,
+        examDate: inheritedDate,
+        session: inheritedSession,
+        building: inheritedBuilding,
+      });
       pages.push({ pageNumber: i, records });
       onProgress?.(i, totalPages);
     } catch (err) {

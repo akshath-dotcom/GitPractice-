@@ -3,12 +3,98 @@ import {
   UploadCloud, FileText, Loader2, CheckCircle2, AlertTriangle, AlertCircle,
   ClipboardList, Database, ChevronDown, Pencil, Trash2, Flag,
 } from 'lucide-react';
-import { importSeatingPdf, type ImportStats } from '@/lib/importSeating';
+import {
+  prepareSeatingPdf,
+  saveConfirmedRecords,
+  type ImportStats,
+  type PreparedImport,
+} from '@/lib/importSeating';
+import type { ParsedRecord } from '@/lib/pdfParse';
 import { supabase, type ExamUploadRow, type SeatingRecordRow } from '@/lib/supabase';
 import { RecordEditor } from './RecordEditor';
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
+}
+
+type ReviewStatus = 'pending' | 'confirmed' | 'skipped';
+
+function ReviewedRecord({
+  record,
+  index,
+  total,
+  status,
+  onPrevious,
+  onConfirm,
+  onSkip,
+}: {
+  record: ParsedRecord;
+  index: number;
+  total: number;
+  status: ReviewStatus;
+  onPrevious: () => void;
+  onConfirm: () => void;
+  onSkip: () => void;
+}) {
+  return (
+    <div className="space-y-5 px-6 py-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Record {index + 1} of {total}
+        </p>
+        {status !== 'pending' && (
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
+            status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
+          }`}>
+            {status === 'confirmed' ? 'Confirmed' : 'Skipped'} — click an action to change
+          </span>
+        )}
+      </div>
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <p className="font-mono text-2xl font-bold text-slate-900">{record.registerNumber}</p>
+        <p className="mt-1 text-sm text-slate-600">{record.examDate} · {record.session}</p>
+        <dl className="mt-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+          {[
+            ['Hall / classroom', record.classroom],
+            ['Building', record.building],
+            ['Row', record.rowNumber],
+            ['Seat', record.seatNumber],
+          ].map(([label, value]) => (
+            <div key={label}>
+              <dt className="text-xs font-medium uppercase tracking-wide text-slate-400">{label}</dt>
+              <dd className="mt-1 font-semibold text-slate-800">{value ?? 'Not listed in PDF'}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={onPrevious}
+          disabled={index === 0}
+          className="rounded-xl border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40"
+        >
+          Previous
+        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={onSkip}
+            className="rounded-xl border border-slate-300 px-4 py-2.5 font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            Skip record
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="rounded-xl bg-emerald-600 px-4 py-2.5 font-semibold text-white hover:bg-emerald-700"
+          >
+            {index === total - 1 ? 'Confirm record' : 'Confirm and next'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function StatCard({ label, value, tone }: { label: string; value: number | string; tone: string }) {
@@ -27,6 +113,9 @@ export function AdminPanel() {
   const [classroom, setClassroom] = useState('');
   const [progress, setProgress] = useState<{ pct: number; stage: string } | null>(null);
   const [stats, setStats] = useState<ImportStats | null>(null);
+  const [prepared, setPrepared] = useState<PreparedImport | null>(null);
+  const [reviewStatuses, setReviewStatuses] = useState<ReviewStatus[]>([]);
+  const [reviewIndex, setReviewIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [uploads, setUploads] = useState<ExamUploadRow[]>([]);
   const [reviewRecords, setReviewRecords] = useState<SeatingRecordRow[]>([]);
@@ -60,8 +149,9 @@ export function AdminPanel() {
     }
     setError(null);
     setStats(null);
+    setPrepared(null);
     try {
-      const result = await importSeatingPdf(
+      const result = await prepareSeatingPdf(
         file,
         {
           examDate: examDate || undefined,
@@ -70,12 +160,50 @@ export function AdminPanel() {
         },
         (pct, stage) => setProgress({ pct, stage }),
       );
+      setPrepared(result);
+      setReviewStatuses(result.records.map(() => 'pending'));
+      setReviewIndex(0);
+      if (result.records.length === 0) setError(result.processingErrors.join(' '));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'PDF processing failed. Please try again.');
+    } finally {
+      setProgress(null);
+    }
+  }
+
+  function reviewCurrentRecord(status: Exclude<ReviewStatus, 'pending'>) {
+    setReviewStatuses((current) =>
+      current.map((item, index) => (index === reviewIndex ? status : item)),
+    );
+    if (prepared && reviewIndex < prepared.records.length - 1) {
+      setReviewIndex((index) => index + 1);
+    }
+  }
+
+  async function saveReviewedRecords() {
+    if (!file || !prepared || reviewStatuses.some((status) => status === 'pending')) return;
+    const confirmedRecords = prepared.records.filter((_, index) => reviewStatuses[index] === 'confirmed');
+    if (confirmedRecords.length === 0) {
+      setError('Confirm at least one record before saving this PDF.');
+      return;
+    }
+
+    setError(null);
+    try {
+      const result = await saveConfirmedRecords(
+        file,
+        prepared,
+        confirmedRecords,
+        (pct, stage) => setProgress({ pct, stage }),
+      );
       setStats(result);
+      setPrepared(null);
+      setReviewStatuses([]);
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       loadHistory();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Import failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Saving confirmed records failed.');
     } finally {
       setProgress(null);
     }
@@ -103,7 +231,7 @@ export function AdminPanel() {
           <div>
             <h2 className="text-xl font-bold text-slate-900">Upload Seating Arrangement</h2>
             <p className="text-sm text-slate-500">
-              Every page is read and every student record is saved permanently. Existing records are never overwritten.
+              Review and confirm each extracted student before saving. Existing records are never overwritten.
             </p>
           </div>
         </div>
@@ -122,8 +250,9 @@ export function AdminPanel() {
             </select>
           </label>
           <label className="block">
-            <span className="text-sm font-medium text-slate-700">Classroom (optional override)</span>
+            <span className="text-sm font-medium text-slate-700">Classroom override (optional)</span>
             <input value={classroom} onChange={(e) => setClassroom(e.target.value)} placeholder="e.g. Room 204" className={`${inputCls} mt-1.5`} />
+            <span className="mt-1 block text-xs text-slate-500">Applies to every record; leave blank to use halls detected in the PDF.</span>
           </label>
         </div>
 
@@ -137,7 +266,14 @@ export function AdminPanel() {
             type="file"
             accept="application/pdf"
             className="sr-only"
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+            onChange={(e) => {
+              setFile(e.target.files?.[0] ?? null);
+              setPrepared(null);
+              setReviewStatuses([]);
+              setReviewIndex(0);
+              setStats(null);
+              setError(null);
+            }}
           />
           <FileText className={`w-10 h-10 ${file ? 'text-emerald-600' : 'text-slate-400'}`} />
           {file ? (
@@ -174,13 +310,71 @@ export function AdminPanel() {
 
         <button
           onClick={handleImport}
-          disabled={!file || !!progress}
+          disabled={!file || !!progress || !!prepared}
           className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-white font-semibold hover:bg-emerald-700 disabled:opacity-50 transition shadow-sm shadow-emerald-600/20"
         >
           {progress ? <Loader2 className="w-5 h-5 animate-spin" /> : <UploadCloud className="w-5 h-5" />}
-          {progress ? 'Importing…' : 'Import seating arrangement'}
+          {progress ? progress.stage : 'Read PDF and prepare records'}
         </button>
       </div>
+
+      {prepared && prepared.records.length > 0 && (
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 bg-slate-50 px-6 py-5">
+            <h3 className="text-lg font-bold text-slate-900">Confirm records one at a time</h3>
+            <p className="mt-1 text-sm text-slate-600">
+              Nothing is saved until you confirm each record and choose Save confirmed records.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+              <span className="font-semibold text-slate-700">{prepared.fileName}</span>
+              <span className="text-slate-600">{prepared.pagesProcessed} pages</span>
+              <span className="text-emerald-700">{reviewStatuses.filter((status) => status === 'confirmed').length} confirmed</span>
+              <span className="text-slate-600">{reviewStatuses.filter((status) => status === 'pending').length} remaining</span>
+              <span className="text-amber-700">{reviewStatuses.filter((status) => status === 'skipped').length} skipped</span>
+            </div>
+          </div>
+
+          {reviewStatuses.every((status) => status !== 'pending') ? (
+            <div className="space-y-4 px-6 py-6">
+              <p className="font-medium text-slate-800">
+                Review complete: {reviewStatuses.filter((status) => status === 'confirmed').length} confirmed,{' '}
+                {reviewStatuses.filter((status) => status === 'skipped').length} skipped.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={saveReviewedRecords}
+                  disabled={!!progress || reviewStatuses.every((status) => status !== 'confirmed')}
+                  className="rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white hover:bg-emerald-700 disabled:opacity-50"
+                >
+                  {progress ? progress.stage : `Save ${reviewStatuses.filter((status) => status === 'confirmed').length} confirmed records`}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPrepared(null);
+                    setReviewStatuses([]);
+                    setReviewIndex(0);
+                  }}
+                  className="rounded-xl border border-slate-300 px-5 py-2.5 font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                  Cancel review
+                </button>
+              </div>
+            </div>
+          ) : prepared.records[reviewIndex] ? (
+            <ReviewedRecord
+              record={prepared.records[reviewIndex]}
+              index={reviewIndex}
+              total={prepared.records.length}
+              status={reviewStatuses[reviewIndex]}
+              onPrevious={() => setReviewIndex((index) => Math.max(0, index - 1))}
+              onConfirm={() => reviewCurrentRecord('confirmed')}
+              onSkip={() => reviewCurrentRecord('skipped')}
+            />
+          ) : null}
+        </div>
+      )}
 
       {/* Confirmation */}
       {stats && (

@@ -18,18 +18,20 @@ export interface ImportOptions {
   classroom?: string;
 }
 
+export interface PreparedImport {
+  fileName: string;
+  pagesProcessed: number;
+  records: ParsedRecord[];
+  processingErrors: string[];
+  options: ImportOptions;
+}
 
-
-/**
- * Parse a seating-arrangement PDF and permanently store every extracted
- * seating record. Never deletes or overwrites existing rows: duplicates are
- * skipped and conflicting rows are flagged for admin review.
- */
-export async function importSeatingPdf(
+/** Parse a PDF without saving records, so an admin can review them first. */
+export async function prepareSeatingPdf(
   file: File,
   options: ImportOptions | undefined,
   onProgress: (pct: number, stage: string) => void,
-): Promise<ImportStats> {
+): Promise<PreparedImport> {
   const opts = options ?? {};
   const processingErrors: string[] = [];
 
@@ -62,7 +64,29 @@ export async function importSeatingPdf(
     );
   }
 
-  const valid = extracted.filter((r) => {
+  onProgress(78, 'Preparing records for review…');
+  return {
+    fileName: file.name,
+    pagesProcessed: totalPages,
+    records: extracted,
+    processingErrors,
+    options: opts,
+  };
+}
+
+/**
+ * Save only records explicitly confirmed by the admin. Existing rows are
+ * never overwritten; duplicate rows are reported for manual review.
+ */
+export async function saveConfirmedRecords(
+  file: File,
+  prepared: PreparedImport,
+  confirmedRecords: ParsedRecord[],
+  onProgress: (pct: number, stage: string) => void,
+): Promise<ImportStats> {
+  const processingErrors = [...prepared.processingErrors];
+  const recordsExtracted = prepared.records.length;
+  const valid = confirmedRecords.filter((r) => {
     const ok = r.examDate && r.session && r.registerNumber.length >= 6;
     if (!ok) processingErrors.push(`Skipped a record for ${r.registerNumber}: missing date or session`);
     return ok;
@@ -82,7 +106,7 @@ export async function importSeatingPdf(
     .insert({
       file_name: file.name,
       storage_path: storagePath,
-      pages_processed: totalPages,
+      pages_processed: prepared.pagesProcessed,
       records_extracted: recordsExtracted,
     })
     .select()
@@ -111,6 +135,7 @@ export async function importSeatingPdf(
           floor: r.floor,
           row_number: r.rowNumber,
           seat_number: r.seatNumber,
+          verified: true,
         })),
       )
       .select('id, register_number, exam_date, session, classroom');
@@ -132,6 +157,7 @@ export async function importSeatingPdf(
               floor: r.floor,
               row_number: r.rowNumber,
               seat_number: r.seatNumber,
+              verified: true,
             })
             .select('id');
           if (oneError?.code === '23505') {
@@ -170,13 +196,23 @@ export async function importSeatingPdf(
   return {
     uploadId,
     fileName: file.name,
-    pagesProcessed: totalPages,
+    pagesProcessed: prepared.pagesProcessed,
     recordsExtracted,
     recordsSaved,
     duplicatesDetected,
     recordsFlagged,
     processingErrors,
   };
+}
+
+/** Backwards-compatible parse-and-save entry point. */
+export async function importSeatingPdf(
+  file: File,
+  options: ImportOptions | undefined,
+  onProgress: (pct: number, stage: string) => void,
+): Promise<ImportStats> {
+  const prepared = await prepareSeatingPdf(file, options, onProgress);
+  return saveConfirmedRecords(file, prepared, prepared.records, onProgress);
 }
 
 /** Student search across the ENTIRE permanent database. */
